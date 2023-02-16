@@ -52,6 +52,7 @@ class ViewController: UIViewController {
         }
         PZXEventAddManager.sharedManager.reminderAdd(calendartitle: "饭局助手", title: "测试标题", notes: "测试备注", date: Date()) { isSuccess in
             
+            
         }
 
         
