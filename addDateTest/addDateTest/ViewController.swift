@@ -47,8 +47,12 @@ class ViewController: UIViewController {
     @IBAction func ButtonPressed(_ sender: UIButton) {
         
         
-        PZXEventAddManager.sharedManager.ReminderCalendarAdd(title: "饭局助手")
-        PZXEventAddManager.sharedManager.reminderAdd(calendartitle: "饭局助手", title: "测试标题", notes: "测试备注", date: Date())
+        PZXEventAddManager.sharedManager.ReminderCalendarAdd(title: "饭局助手") { isSuccess in
+            
+        }
+        PZXEventAddManager.sharedManager.reminderAdd(calendartitle: "饭局助手", title: "测试标题", notes: "测试备注", date: Date()) { isSuccess in
+            
+        }
 
         
         

@@ -8,14 +8,18 @@
 import UIKit
 import EventKit
 
+typealias PZXEventAddManagerBlock = (Bool) -> ()// 声明闭包
+
 class PZXEventAddManager: NSObject {
     
     static let sharedManager = PZXEventAddManager()
     
+    var callback :PZXEventAddManagerBlock? //把闭包声明成属性
     
     /// 添加提醒事项列表
     /// - Parameter title: 标题
-    public func ReminderCalendarAdd(title:String){
+    /// - Parameter isSuccess: 回调- true 成功 false 失败
+    public func ReminderCalendarAdd(title:String,isSuccess:PZXEventAddManagerBlock!){
         
         
         let array =  PZXEventStore.eventStore.calendars(for: .reminder)
@@ -41,7 +45,9 @@ class PZXEventAddManager: NSObject {
         do{
             try PZXEventStore.eventStore.saveCalendar(calendar, commit: true)
             debugPrint("成功加入")
+            isSuccess(true)
         }catch  {
+            isSuccess(false)
             debugPrint(error)
         }
         
@@ -55,7 +61,8 @@ class PZXEventAddManager: NSObject {
     ///   - title: 标题
     ///   - notes: 备注
     ///   - date: 提醒日期
-    public func reminderAdd(calendartitle:String,title:String,notes : String,date : Date){
+    ///   - isSuccess:  回调- true 成功 false 失败
+    public func reminderAdd(calendartitle:String,title:String,notes : String,date : Date,isSuccess:PZXEventAddManagerBlock!){
         
         let reminder = EKReminder.init(eventStore: PZXEventStore.eventStore);
         reminder.title = title;
@@ -79,8 +86,12 @@ class PZXEventAddManager: NSObject {
         reminder.addAlarm(alarm)
         do {
           try PZXEventStore.eventStore.save(reminder, commit: true)
+            isSuccess(true)
+
         } catch {
           print("save reminder error: \(error)")
+            isSuccess(false)
+
         }
         
         
@@ -92,7 +103,8 @@ class PZXEventAddManager: NSObject {
     ///   - title: 标题
     ///   - notes: 备注
     ///   - startDate: 开始时间
-    public func eventAdd(title:String,notes : String,startDate : Date){
+    /// - Parameter isSuccess: 回调- true 成功 false 失败
+    public func eventAdd(title:String,notes : String,startDate : Date,isSuccess:PZXEventAddManagerBlock!){
         
         let event:EKEvent = EKEvent(eventStore: PZXEventStore.eventStore);
         event.title = title
@@ -105,8 +117,12 @@ class PZXEventAddManager: NSObject {
         do {
           try PZXEventStore.eventStore.save(event, span: .futureEvents, commit: true)
             debugPrint("Saved Event")
+            isSuccess(true)
+
         } catch {
           print("save calendar error:\(error)")
+            isSuccess(false)
+
         }
 
         
